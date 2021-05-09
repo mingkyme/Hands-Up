@@ -11,6 +11,7 @@ server.listen(5124, function() {
 var users = [];
 var handsUp = [];
 io.on('connect',function(socket){
+    socket.emit('handsup-list',JSON.stringify(handsUp));
     users.push([socket,'']);
     socket.broadcast.emit('user-count',users.length);
     socket.on('init',function(name){
