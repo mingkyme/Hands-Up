@@ -17,76 +17,33 @@
     </style>
     <script>
         var socket = io();
-        socket.on('teacher',function(){
-            document.getElementById('teacher-container').hidden = false;
-            document.getElementById('student-container').hidden = true;
-        });
         socket.on('handsup-list',function(data){
             refreshHandsupList(data);
-        });
-        socket.on('user-count',function(count){
-            document.getElementById('user-count').textContent = count;
-        });
-        socket.on('nickname',function(name){
-            document.getElementById('nickname').textContent = name;
         });
         function handsUp(){
             socket.emit('handsup');
         }
-        function handsDown(index){
-            socket.emit('handsdown',index);
-        }
-        function refreshHandsupList(data){
-            var old = document.getElementById('handsup-list');
-            var new_tbody = document.createElement('tbody');
-            new_tbody.id = "handsup-list";
-            var data = JSON.parse(data);
-            for(var i=0;i<data.length;i++){
-                var tr = document.createElement('tr');
-                var td1 = document.createElement('td');
-                var td2 = document.createElement('td');
-                var td3 = document.createElement('td');
-                var btn = document.createElement('button');
-
-                td1.textContent = i+1;
-                td2.textContent = data[i];
-                btn.classList = 'btn btn-primary';
-                btn.setAttribute("onclick", "handsDown("+i+")");
-                btn.textContent = "내리기";
-                td3.appendChild(btn);
-
-                new_tbody.appendChild(tr);
-                tr.appendChild(td1);
-                tr.appendChild(td2);
-                tr.appendChild(td3);
-            }
-
-            old.parentNode.replaceChild(new_tbody, old);
+        function setName(){
+            var name = document.getElementById('name-input').value;
+            socket.emit('init',name);
+            document.getElementById('name-div').hidden = true;
+            document.getElementById('handsup-div').hidden = false;
+            document.getElementById('name').textContent = name;
         }
     </script>
 </head>
 
 <body>
     <div class="container">
-        <div id="teacher-container" hidden>
-            <table class="table">
-                <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">이름</th>
-                      <!-- <th scope="col">시간</th> -->
-                      <th scope="col">내리기</th>
-                    </tr>
-                  </thead>
-                  <tbody id="handsup-list">
-                  </tbody>
-                </table>
-                <p id="user-count">1</p><p>명 접속 중</p>
-        </div>
-
         <div id="student-container" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);">
-            <button onclick="handsUp();" class="btn btn-success" style="border-radius: 50%; width: 500px; height: 500px; font-size: 128px; text-align: center;">🙌</button>
-            <h2 style="text-align: center;">당신은 <p id="nickname"></p></h2>
+            <div id="name-div">
+                <input id="name-input" type="text" placeholder="이름">
+                <button onclick="setName();">확인</button>
+            </div>
+            <div id="handsup-div" hidden>
+                <button onclick="handsUp();" class="btn btn-success" style="border-radius: 50%; width: 500px; height: 500px; font-size: 128px; text-align: center;">🙌</button>
+                <h2 style="text-align: center;">당신은 <p id="name"></p></h2>
+            </div>
         </div>
     </div>
 </body>

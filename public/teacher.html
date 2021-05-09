@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/lib/qrcode.min.js"></script>
+    <title>🙌</title>
+    <style>
+        p{
+            display: inline;
+        }
+    </style>
+    <script>
+        var socket = io();
+        socket.emit('teacher');
+
+        socket.on('teacher',function(){
+            document.getElementById('teacher-container').hidden = false;
+            document.getElementById('student-container').hidden = true;
+        });
+        socket.on('handsup-list',function(data){
+            refreshHandsupList(data);
+        });
+        socket.on('user-count',function(count){
+            document.getElementById('user-count').textContent = count-1;
+        });
+        function handsDown(index){
+            socket.emit('handsdown',index);
+        }
+        function setName(){
+            var name = document.getElementById('name-input').value;
+            socket.emit('init',name);
+            document.getElementById('name-div').hidden = true;
+            document.getElementById('handsup-div').hidden = false;
+            document.getElementById('name').textContent = name;
+        }
+        function refreshHandsupList(data){
+            var old = document.getElementById('handsup-list');
+            var new_tbody = document.createElement('tbody');
+            new_tbody.id = "handsup-list";
+            var data = JSON.parse(data);
+            for(var i=0;i<data.length;i++){
+                var tr = document.createElement('tr');
+                var td1 = document.createElement('td');
+                var td2 = document.createElement('td');
+                var td3 = document.createElement('td');
+                var btn = document.createElement('button');
+
+                td1.textContent = i+1;
+                td2.textContent = data[i];
+                btn.classList = 'btn btn-primary';
+                btn.setAttribute("onclick", "handsDown("+i+")");
+                btn.textContent = "내리기";
+                td3.appendChild(btn);
+
+                new_tbody.appendChild(tr);
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+            }
+
+            old.parentNode.replaceChild(new_tbody, old);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="teacher-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">이름</th>
+                      <th scope="col">내리기</th>
+                    </tr>
+                  </thead>
+                  <tbody id="handsup-list">
+                  </tbody>
+                </table>
+                <p id="user-count">1</p><p>명 접속 중</p>
+            </div>
+            <div id="qrcode"></div>
+    </div>
+    <script type="text/javascript">
+        new QRCode(document.getElementById("qrcode"), "https://handsup.mingky.me/");
+    </script>
+</body>
+
+</html>
