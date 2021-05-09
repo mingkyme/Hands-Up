@@ -5,7 +5,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-server.listen(80, function() {
+server.listen(5124, function() {
     console.log('Hands Up Server on 5124');
 });
 

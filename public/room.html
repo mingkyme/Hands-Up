@@ -28,7 +28,7 @@
             document.getElementById('user-count').textContent = count;
         });
         socket.on('nickname',function(name){
-            alert('you are '+name);
+            document.getElementById('nickname').textContent = name;
         });
         function handsUp(){
             socket.emit('handsup');
@@ -86,7 +86,7 @@
 
         <div id="student-container" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);">
             <button onclick="handsUp();" class="btn btn-success" style="border-radius: 50%; width: 500px; height: 500px; font-size: 128px; text-align: center;">🙌</button>
-            <h2 style="text-align: center;">손 들기</h2>
+            <h2 style="text-align: center;">당신은 <p id="nickname"></p></h2>
         </div>
     </div>
 </body>
