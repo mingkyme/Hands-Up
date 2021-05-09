@@ -34,9 +34,6 @@ io.on('connect',function(socket){
         socket.broadcast.emit('handsup-list',JSON.stringify(handsUp)); 
     });
 });
-app.get('/',function(req,res){
-    res.sendFile(__dirname+'/public/room.html');
-});
 app.get('/teacher',function(req,res){
     res.sendFile(__dirname+'/public/teacher.html');
 });
