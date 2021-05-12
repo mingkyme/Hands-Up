@@ -17,9 +17,6 @@
     </style>
     <script>
         var socket = io();
-        socket.on('handsup-list',function(data){
-            refreshHandsupList(data);
-        });
         function handsUp(){
             socket.emit('handsup');
         }
