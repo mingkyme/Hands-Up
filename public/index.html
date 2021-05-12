@@ -22,10 +22,14 @@
         }
         function setName(){
             var name = document.getElementById('name-input').value;
-            socket.emit('init',name);
-            document.getElementById('name-div').hidden = true;
-            document.getElementById('handsup-div').hidden = false;
-            document.getElementById('name').textContent = name;
+            if(name != ""){
+                socket.emit('init',name);
+                document.getElementById('name-div').hidden = true;
+                document.getElementById('handsup-div').hidden = false;
+                document.getElementById('name').textContent = name;
+            }else{
+                alert("이름을 입력하세요");
+            }
         }
     </script>
 </head>
