@@ -69,5 +69,5 @@ let rooms = new Object();
 let sockets = new Object();
 
 app.get('/:room',function(req,res){
-    res.send(req.query.rooms);
+    res.send(req.params.rooms);
 });
