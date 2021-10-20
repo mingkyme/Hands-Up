@@ -11,7 +11,6 @@ server.listen(5124, function() {
 var users = [];
 var handsUp = [];
 io.on('connect',function(socket){
-    
     socket.on('init',function(name){
         if(name != null && name != ""){
             users.push([socket,name]);
@@ -43,4 +42,32 @@ io.on('connect',function(socket){
 });
 app.get('/teacher',function(req,res){
     res.sendFile(__dirname+'/public/teacher.html');
+});
+
+// 랜덤 5글자의 방ID를 이용해 멀티룸 구현
+// 예상 형식
+/*
+
+// user name
+let rooms = {
+    "abcde" :[
+        "MINGKYME",
+        "JACKSON"
+    ]
+}
+STRING : [STRING ARRAY]
+
+
+// socket user
+let sockets = {
+    "abcde" : []
+}
+// STRING : [SOCKET ARRAY]
+
+*/
+let rooms = new Object();
+let sockets = new Object();
+
+app.get('/:room',function(req,res){
+    res.send(req.query.rooms);
 });
